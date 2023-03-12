@@ -29,3 +29,9 @@ export type Character = {
   url: string
   created: string
 }
+
+export interface IRequest {
+  page: string
+  filterStatus: string
+  filterGender: string
+}
