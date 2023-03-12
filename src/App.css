@@ -1,0 +1,20 @@
+.episodes {
+  height: 300px;
+  overflow-y: auto;
+  box-shadow: 1px 0px 10px rgba(0, 0, 0, 0.188);
+  margin: 10px 0;
+  padding-left: 10px;
+  display: flex;
+  flex-direction: column;
+}
+.episodes a {
+  margin: 5px 0;
+}
+.filter {
+  display: flex;
+  width: 50%;
+  margin-bottom: 10px;
+}
+.filter button {
+  margin-left: 10px;
+}
