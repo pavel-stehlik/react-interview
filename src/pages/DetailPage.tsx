@@ -1,5 +1,31 @@
 import { useParams } from 'react-router-dom'
 import { useCharacterById } from '../api/api'
+import { Typography, Box, Avatar, Grid } from '@mui/material'
+import { styled } from '@mui/material/styles'
+
+const DetailContainer = styled(Grid)({
+  padding: '16px'
+})
+
+const CharacterName = styled(Typography)({
+  fontSize: '24px',
+  fontWeight: 'bold'
+})
+
+const CharacterStatus = styled(Typography)({
+  fontSize: '18px',
+  fontStyle: 'italic'
+})
+
+const CharacterInfo = styled(Box)({
+  marginTop: '16px'
+})
+
+const FullWidthAvatar = styled(Avatar)({
+  width: '100%',
+  height: 'auto',
+  maxWidth: '250px'
+})
 
 export const DetailPage = () => {
   const { id } = useParams<{ id: string }>()
@@ -15,12 +41,22 @@ export const DetailPage = () => {
   }
 
   return (
-    <div>
-      <h2>{character.name}</h2>
-      <img src={character.image} alt={character.name} />
-      <p>Status: {character.status}</p>
-      <p>Species: {character.species}</p>
-      <p>Gender: {character.gender}</p>
-    </div>
+    <DetailContainer container={true} spacing={2}>
+      <Grid item={true} xs={12}>
+        <CharacterName>{character.name}</CharacterName>
+      </Grid>
+      <Grid item={true} xs={12} sm={4}>
+        <FullWidthAvatar src={character.image} alt={character.name} />
+      </Grid>
+      <Grid item={true} xs={12} sm={8}>
+        <CharacterInfo>
+          <Typography>
+            Status: <CharacterStatus>{character.status}</CharacterStatus>
+          </Typography>
+          <Typography>Species: {character.species}</Typography>
+          <Typography>Gender: {character.gender}</Typography>
+        </CharacterInfo>
+      </Grid>
+    </DetailContainer>
   )
 }
