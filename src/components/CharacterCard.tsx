@@ -11,11 +11,11 @@ export const CharacterCard = ({ character, onClick }: Props) => (
     sx={{ p: 1, display: 'flex', flexDirection: 'row', alignItems: 'center', cursor: 'pointer' }}
     onClick={() => onClick(character.id)}
   >
-    <Avatar src="https://rickandmortyapi.com/api/character/avatar/2.jpeg" />
+    <Avatar src={character.image} />
     <Box sx={{ ml: 2, display: 'flex', flexDirection: 'column' }}>
       <Typography>{character.name}</Typography>
       <Typography variant="caption" color="text.secondary">
-        {character.species} - {character.status}
+        {character.species} - {character.status} - {character.gender}
       </Typography>
     </Box>
   </Card>

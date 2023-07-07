@@ -1,28 +1,65 @@
+import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { Character, CharacterGender, CharacterStatus } from '../api/types'
+import { Box, Button, FormControl, InputLabel, MenuItem, Select, Typography } from '@mui/material'
+import { useCharacters } from '../api/api'
 import { CharacterCard } from '../components/CharacterCard'
+import { CharacterGender, CharacterStatus } from '../api/types'
 
 export const ListPage = () => {
   const history = useHistory()
+  const [status, setStatus] = useState<string>('')
+  const [gender, setGender] = useState<string>('')
+  const { data: characters, isLoading } = useCharacters(status, gender)
 
   const handleCharacterClick = (id: number) => {
     history.push(`/detail/${id}`)
   }
 
-  const mock: Character = {
-    id: 2,
-    name: 'Morty Smith',
-    status: CharacterStatus.ALIVE,
-    species: 'Human',
-    type: '',
-    gender: CharacterGender.MALE,
-    origin: { name: 'unknown', url: '' },
-    location: { name: 'Citadel of Ricks', url: 'https://rickandmortyapi.com/api/location/3' },
-    image: 'https://rickandmortyapi.com/api/character/avatar/2.jpeg',
-    episode: [],
-    url: 'https://rickandmortyapi.com/api/character/2',
-    created: '2017-11-04T18:50:21.651Z'
+  if (isLoading) {
+    return <div>Loading...</div>
   }
 
-  return <CharacterCard character={mock} onClick={handleCharacterClick} />
+  return (
+    <div>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+        <FormControl sx={{ minWidth: 120, mr: 2 }}>
+          <InputLabel>Status</InputLabel>
+          <Select value={status} onChange={e => setStatus(e.target.value as string)} label="Status">
+            <MenuItem value="">All</MenuItem>
+            {Object.values(CharacterStatus).map(status => (
+              <MenuItem key={status} value={status}>
+                {status}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <FormControl sx={{ minWidth: 120 }}>
+          <InputLabel>Gender</InputLabel>
+          <Select value={gender} onChange={e => setGender(e.target.value as string)} label="Gender">
+            <MenuItem value="">All</MenuItem>
+            {Object.values(CharacterGender).map(gender => (
+              <MenuItem key={gender} value={gender}>
+                {gender}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <Button
+          variant="contained"
+          onClick={() => {
+            // Tady dám trigger na Form pro jistotu
+          }}
+        >
+          Apply Filters
+        </Button>
+      </Box>
+      {characters && characters.length > 0 ? (
+        characters.map(character => (
+          <CharacterCard key={character.id} character={character} onClick={handleCharacterClick} />
+        ))
+      ) : (
+        <Typography>No characters found.</Typography>
+      )}
+    </div>
+  )
 }
