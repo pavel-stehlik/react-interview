@@ -5,6 +5,7 @@ import { CharacterCard } from '../components/CharacterCard'
 import { useCharacterContext } from '../context/CharacterContext'
 import { useDispatch } from 'react-redux'
 import { setFilters } from '../store/reducers/characterSlice'
+import InfiniteScroll from 'react-infinite-scroll-component'
 
 export const ListPage = () => {
   const history = useHistory()
@@ -31,18 +32,20 @@ export const ListPage = () => {
   return (
     <div>
       <CharacterFilters onApplyFilters={handleApplyFilters} />
-      {characters && characters.length > 0 ? (
-        <>
-          {characters.map(character => (
+      <InfiniteScroll
+        dataLength={characters ? characters.length : 0}
+        next={handleLoadMore}
+        hasMore={!!characters?.length}
+        loader={<CircularProgress />}
+      >
+        {characters && characters.length > 0 ? (
+          characters.map(character => (
             <CharacterCard key={character.id} character={character} onClick={handleCharacterClick} />
-          ))}
-          <Button variant="contained" onClick={handleLoadMore} disabled={isLoading}>
-            Load More
-          </Button>
-        </>
-      ) : (
-        <Typography>No characters found.</Typography>
-      )}
+          ))
+        ) : (
+          <Typography>No characters found.</Typography>
+        )}
+      </InfiniteScroll>
     </div>
   )
 }
