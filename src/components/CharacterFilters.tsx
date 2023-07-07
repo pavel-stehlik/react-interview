@@ -1,10 +1,17 @@
 import { useState } from 'react'
 import { Box, Button, FormControl, InputLabel, MenuItem, Select } from '@mui/material'
+import { styled } from '@mui/system'
 import { CharacterStatus } from '../api/types'
 
 type Props = {
   onApplyFilters: (status: string, gender: string) => void
 }
+
+const FiltersContainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'flex-end',
+  marginBottom: theme.spacing(2)
+}))
 
 export const CharacterFilters = ({ onApplyFilters }: Props) => {
   const [status, setStatus] = useState<string>('')
@@ -15,8 +22,8 @@ export const CharacterFilters = ({ onApplyFilters }: Props) => {
   }
 
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
-      <FormControl sx={{ minWidth: 120, mr: 2 }}>
+    <FiltersContainer>
+      <FormControl sx={{ minWidth: 120, marginRight: 2 }}>
         <InputLabel>Status</InputLabel>
         <Select value={status} onChange={e => setStatus(e.target.value as string)} label="Status">
           <MenuItem value="">All</MenuItem>
@@ -40,6 +47,6 @@ export const CharacterFilters = ({ onApplyFilters }: Props) => {
       <Button variant="contained" onClick={handleApplyFilters}>
         Apply Filters
       </Button>
-    </Box>
+    </FiltersContainer>
   )
 }
