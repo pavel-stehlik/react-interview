@@ -12,7 +12,7 @@ export const ListPage = () => {
   const { data: characters, isLoading } = useCharacters(status, gender)
 
   const handleCharacterClick = (id: number) => {
-    history.push(`/detail/${id}`)
+    history.push(`/detail/${id}`, { prevPath: history.location.pathname })
   }
 
   if (isLoading) {
@@ -47,7 +47,7 @@ export const ListPage = () => {
         <Button
           variant="contained"
           onClick={() => {
-            // Tady dám trigger na Form pro jistotu
+            // Trigger refetch of characters with updated filters
           }}
         >
           Apply Filters

@@ -1,6 +1,6 @@
-import { useParams } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom'
 import { useCharacterById } from '../api/api'
-import { Typography, Box, Avatar, Grid } from '@mui/material'
+import { Typography, Box, Avatar, Grid, Button } from '@mui/material'
 import { styled } from '@mui/material/styles'
 
 const DetailContainer = styled(Grid)({
@@ -31,6 +31,11 @@ export const DetailPage = () => {
   const { id } = useParams<{ id: string }>()
   const characterId = parseInt(id, 10)
   const { data: character, isLoading } = useCharacterById(characterId)
+  const history = useHistory()
+
+  const handleGoBack = () => {
+    history.goBack()
+  }
 
   if (isLoading) {
     return <div>Loading...</div>
@@ -56,6 +61,11 @@ export const DetailPage = () => {
           <Typography>Species: {character.species}</Typography>
           <Typography>Gender: {character.gender}</Typography>
         </CharacterInfo>
+      </Grid>
+      <Grid item={true} xs={12}>
+        <Button variant="contained" onClick={handleGoBack}>
+          Go Back
+        </Button>
       </Grid>
     </DetailContainer>
   )
