@@ -5,20 +5,23 @@ import { AppLayout } from './AppLayout'
 import { DetailPage } from './pages/DetailPage'
 import { ListPage } from './pages/ListPage'
 import store from './store'
+import { CharacterProvider } from './context/CharacterContext'
 
 const queryClient = new QueryClient()
 
 export const App = () => (
   <QueryClientProvider client={queryClient}>
     <Provider store={store}>
-      <AppLayout>
-        <BrowserRouter>
-          <Switch>
-            <Route path="/detail/:id" component={DetailPage} />
-            <Route path="/" component={ListPage} />
-          </Switch>
-        </BrowserRouter>
-      </AppLayout>
+      <CharacterProvider>
+        <AppLayout>
+          <BrowserRouter>
+            <Switch>
+              <Route path="/detail/:id" component={DetailPage} />
+              <Route path="/" component={ListPage} />
+            </Switch>
+          </BrowserRouter>
+        </AppLayout>
+      </CharacterProvider>
     </Provider>
   </QueryClientProvider>
 )

@@ -1,18 +1,22 @@
 import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Box, Button, FormControl, InputLabel, MenuItem, Select, Typography } from '@mui/material'
-import { useCharacters } from '../api/api'
 import { CharacterCard } from '../components/CharacterCard'
-import { CharacterGender, CharacterStatus } from '../api/types'
+import { CharacterStatus } from '../api/types'
+import { useCharacterContext } from '../context/CharacterContext'
 
 export const ListPage = () => {
   const history = useHistory()
   const [status, setStatus] = useState<string>('')
   const [gender, setGender] = useState<string>('')
-  const { data: characters, isLoading } = useCharacters(status, gender)
+  const { characters, isLoading, fetchCharacters } = useCharacterContext()
 
   const handleCharacterClick = (id: number) => {
     history.push(`/detail/${id}`, { prevPath: history.location.pathname })
+  }
+
+  const handleApplyFilters = () => {
+    fetchCharacters(status, gender)
   }
 
   if (isLoading) {
@@ -37,19 +41,13 @@ export const ListPage = () => {
           <InputLabel>Gender</InputLabel>
           <Select value={gender} onChange={e => setGender(e.target.value as string)} label="Gender">
             <MenuItem value="">All</MenuItem>
-            {Object.values(CharacterGender).map(gender => (
-              <MenuItem key={gender} value={gender}>
-                {gender}
-              </MenuItem>
-            ))}
+            <MenuItem value="male">Male</MenuItem>
+            <MenuItem value="female">Female</MenuItem>
+            <MenuItem value="genderless">Genderless</MenuItem>
+            <MenuItem value="unknown">Unknown</MenuItem>
           </Select>
         </FormControl>
-        <Button
-          variant="contained"
-          onClick={() => {
-            // Trigger refetch of characters with updated filters
-          }}
-        >
+        <Button variant="contained" onClick={handleApplyFilters}>
           Apply Filters
         </Button>
       </Box>

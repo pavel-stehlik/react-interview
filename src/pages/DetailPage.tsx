@@ -1,7 +1,7 @@
 import { useParams, useHistory } from 'react-router-dom'
-import { useCharacterById } from '../api/api'
 import { Typography, Box, Avatar, Grid, Button } from '@mui/material'
 import { styled } from '@mui/material/styles'
+import { useCharacterContext } from '../context/CharacterContext'
 
 const DetailContainer = styled(Grid)({
   padding: '16px'
@@ -30,7 +30,8 @@ const FullWidthAvatar = styled(Avatar)({
 export const DetailPage = () => {
   const { id } = useParams<{ id: string }>()
   const characterId = parseInt(id, 10)
-  const { data: character, isLoading } = useCharacterById(characterId)
+  const { characters, isLoading } = useCharacterContext()
+  const character = characters?.find(character => character.id === characterId)
   const history = useHistory()
 
   const handleGoBack = () => {
