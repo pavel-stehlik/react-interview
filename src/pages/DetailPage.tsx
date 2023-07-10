@@ -3,8 +3,10 @@ import { Typography, Box, Avatar, Grid, Button } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import { useCharacterContext } from '../contexts/CharacterContext'
 import { useEffect, useState } from 'react'
-import { Character, CharacterStatus, CharacterGender, Location } from 'api/types'
+import { Character } from 'api/types'
 import { EpisodeList } from '../components/EpisodeList'
+import { format } from 'date-fns'
+import { cs } from 'date-fns/locale'
 
 const DetailContainer = styled(Grid)({
   padding: '16px'
@@ -43,7 +45,7 @@ export const DetailPage = () => {
       const character = await fetchCharacterById(characterId)
       if (character) {
         setCharacter(character)
-        setEpisodes(character.episode) // Přidáno nastavení epizod
+        setEpisodes(character.episode)
       }
     }
     fetchCharacter()
@@ -56,6 +58,12 @@ export const DetailPage = () => {
   if (!character) {
     return <div>Character not found</div>
   }
+
+  // Formátování data pomocí date-fns
+  const createdDate = new Date(character.created)
+  const formattedCreatedDate = format(createdDate, 'd. MMMM yyyy HH:mm:ss', {
+    locale: cs
+  })
 
   return (
     <DetailContainer container={true} spacing={2}>
@@ -77,7 +85,7 @@ export const DetailPage = () => {
           <Typography>Gender: {character.gender}</Typography>
           <Typography>Origin: {character.origin.name}</Typography>
           <Typography>Location: {character.location.name}</Typography>
-          <Typography>Created: {character.created}</Typography>
+          <Typography>Created: {formattedCreatedDate}</Typography>
           <EpisodeList episodes={episodes} />
         </CharacterInfo>
       </Grid>
