@@ -1,7 +1,7 @@
 import { useParams, useHistory } from 'react-router-dom'
 import { Typography, Box, Avatar, Grid, Button } from '@mui/material'
 import { styled } from '@mui/material/styles'
-import { useCharacterContext } from '../context/CharacterContext'
+import { useCharacterContext } from '../contexts/CharacterContext'
 
 const DetailContainer = styled(Grid)({
   padding: '16px'

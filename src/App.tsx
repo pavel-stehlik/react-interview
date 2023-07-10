@@ -5,7 +5,7 @@ import { AppLayout } from './AppLayout'
 import { DetailPage } from './pages/DetailPage'
 import { ListPage } from './pages/ListPage'
 import store from './store'
-import { CharacterProvider } from './context/CharacterContext'
+import { CharacterProvider } from './contexts/CharacterContext'
 
 const queryClient = new QueryClient()
 

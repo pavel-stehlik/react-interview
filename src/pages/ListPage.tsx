@@ -1,11 +1,12 @@
 import { useHistory } from 'react-router-dom'
+import InfiniteScroll from 'react-infinite-scroll-component'
 import { Typography, Button, CircularProgress } from '@mui/material'
 import { CharacterFilters } from '../components/CharacterFilters'
 import { CharacterCard } from '../components/CharacterCard'
-import { useCharacterContext } from '../context/CharacterContext'
+import { useCharacterContext } from '../contexts/CharacterContext'
 import { useDispatch } from 'react-redux'
 import { setFilters } from '../store/reducers/characterSlice'
-import InfiniteScroll from 'react-infinite-scroll-component'
+import { ScrollToTopButton } from '../components/ScrollToTopButton'
 
 export const ListPage = () => {
   const history = useHistory()
@@ -36,16 +37,19 @@ export const ListPage = () => {
         dataLength={characters ? characters.length : 0}
         next={handleLoadMore}
         hasMore={!!characters?.length}
-        loader={<CircularProgress />}
+        loader={<h4>Loading ...</h4>}
       >
-        {characters && characters.length > 0 ? (
-          characters.map(character => (
-            <CharacterCard key={character.id} character={character} onClick={handleCharacterClick} />
-          ))
-        ) : (
-          <Typography>No characters found.</Typography>
-        )}
+        <>
+          {characters && characters.length > 0 ? (
+            characters.map(character => (
+              <CharacterCard key={character.id} character={character} onClick={handleCharacterClick} />
+            ))
+          ) : (
+            <Typography>No characters found.</Typography>
+          )}
+        </>
       </InfiniteScroll>
+      <ScrollToTopButton />
     </div>
   )
 }
