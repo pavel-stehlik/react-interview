@@ -2,8 +2,8 @@ import { useState } from 'react'
 import { Box, Button, FormControl, InputLabel, MenuItem, Select } from '@mui/material'
 import { styled } from '@mui/system'
 import { CharacterStatus } from '../api/types'
-import { useDispatch } from 'react-redux'
-import { setFilters } from '../store/reducers/characterSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import { setFilters, selectFilters } from '../store/reducers/characterSlice'
 
 type Props = {
   onApplyFilters: (status: string, gender: string) => void
@@ -16,9 +16,10 @@ const FiltersContainer = styled(Box)(({ theme }) => ({
 }))
 
 export const CharacterFilters = ({ onApplyFilters }: Props) => {
-  const [status, setStatus] = useState<string>('')
-  const [gender, setGender] = useState<string>('')
+  const filters = useSelector(selectFilters)
   const dispatch = useDispatch()
+  const [status, setStatus] = useState<string>(filters.status)
+  const [gender, setGender] = useState<string>(filters.gender)
 
   const handleApplyFilters = () => {
     dispatch(setFilters({ status, gender }))

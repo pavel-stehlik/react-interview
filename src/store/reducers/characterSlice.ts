@@ -28,4 +28,6 @@ const characterSlice = createSlice({
 
 export const { setFilters } = characterSlice.actions
 
+export const selectFilters = (state: { character: CharacterState }) => state.character.filters
+
 export default characterSlice.reducer
