@@ -8,6 +8,7 @@ type CharacterContextData = {
   isLoading: boolean
   fetchCharacters: (status?: string, gender?: string) => Promise<void>
   fetchMoreCharacters: () => Promise<void>
+  fetchCharacterById: (id: number) => Promise<Character | undefined>
 }
 
 const CharacterContext = createContext<CharacterContextData | undefined>(undefined)
@@ -59,12 +60,24 @@ export const CharacterProvider: React.FC = ({ children }) => {
     }
   }, [nextPageUrl])
 
+  const fetchCharacterById = useCallback(async (id: number) => {
+    try {
+      const response = await axios.get(`https://rickandmortyapi.com/api/character/${id}`)
+      return response.data as Character
+    } catch (error) {
+      console.error(`Error fetching character with id ${id}:`, error)
+      return undefined
+    }
+  }, [])
+
   useEffect(() => {
     fetchCharacters()
   }, [])
 
   return (
-    <CharacterContext.Provider value={{ characters, isLoading, fetchCharacters, fetchMoreCharacters }}>
+    <CharacterContext.Provider
+      value={{ characters, isLoading, fetchCharacters, fetchMoreCharacters, fetchCharacterById }}
+    >
       {children}
     </CharacterContext.Provider>
   )

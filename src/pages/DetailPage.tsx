@@ -2,6 +2,9 @@ import { useParams, useHistory } from 'react-router-dom'
 import { Typography, Box, Avatar, Grid, Button } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import { useCharacterContext } from '../contexts/CharacterContext'
+import { useEffect, useState } from 'react'
+import { Character, CharacterStatus, CharacterGender, Location } from 'api/types'
+import { EpisodeList } from '../components/EpisodeList'
 
 const DetailContainer = styled(Grid)({
   padding: '16px'
@@ -10,11 +13,6 @@ const DetailContainer = styled(Grid)({
 const CharacterName = styled(Typography)({
   fontSize: '24px',
   fontWeight: 'bold'
-})
-
-const CharacterStatus = styled(Typography)({
-  fontSize: '18px',
-  fontStyle: 'italic'
 })
 
 const CharacterInfo = styled(Box)({
@@ -30,13 +28,26 @@ const FullWidthAvatar = styled(Avatar)({
 export const DetailPage = () => {
   const { id } = useParams<{ id: string }>()
   const characterId = parseInt(id, 10)
-  const { characters, isLoading } = useCharacterContext()
-  const character = characters?.find(character => character.id === characterId)
+  const { fetchCharacterById, isLoading } = useCharacterContext()
+  const [character, setCharacter] = useState<Character | undefined>(undefined)
+  const [episodes, setEpisodes] = useState<string[]>([])
+
   const history = useHistory()
 
   const handleGoBack = () => {
     history.goBack()
   }
+
+  useEffect(() => {
+    const fetchCharacter = async () => {
+      const character = await fetchCharacterById(characterId)
+      if (character) {
+        setCharacter(character)
+        setEpisodes(character.episode) // Přidáno nastavení epizod
+      }
+    }
+    fetchCharacter()
+  }, [fetchCharacterById, characterId])
 
   if (isLoading) {
     return <div>Loading...</div>
@@ -49,6 +60,11 @@ export const DetailPage = () => {
   return (
     <DetailContainer container={true} spacing={2}>
       <Grid item={true} xs={12}>
+        <Button variant="contained" onClick={handleGoBack}>
+          Go Back
+        </Button>
+      </Grid>
+      <Grid item={true} xs={12}>
         <CharacterName>{character.name}</CharacterName>
       </Grid>
       <Grid item={true} xs={12} sm={4}>
@@ -56,17 +72,14 @@ export const DetailPage = () => {
       </Grid>
       <Grid item={true} xs={12} sm={8}>
         <CharacterInfo>
-          <Typography>
-            Status: <CharacterStatus>{character.status}</CharacterStatus>
-          </Typography>
+          <Typography>Status: {character.status}</Typography>
           <Typography>Species: {character.species}</Typography>
           <Typography>Gender: {character.gender}</Typography>
+          <Typography>Origin: {character.origin.name}</Typography>
+          <Typography>Location: {character.location.name}</Typography>
+          <Typography>Created: {character.created}</Typography>
+          <EpisodeList episodes={episodes} />
         </CharacterInfo>
-      </Grid>
-      <Grid item={true} xs={12}>
-        <Button variant="contained" onClick={handleGoBack}>
-          Go Back
-        </Button>
       </Grid>
     </DetailContainer>
   )

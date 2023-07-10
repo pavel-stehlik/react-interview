@@ -33,7 +33,7 @@ export const ScrollToTopButton = () => {
     return () => {
       window.removeEventListener('scroll', handleScroll)
     }
-  }, [isVisible])
+  }, [])
 
   return (
     <ScrollButton variant="contained" onClick={scrollToTop} style={{ display: isVisible ? 'block' : 'none' }}>

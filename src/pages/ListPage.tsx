@@ -1,6 +1,6 @@
 import { useHistory } from 'react-router-dom'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { Typography, Button, CircularProgress } from '@mui/material'
+import { Typography, CircularProgress } from '@mui/material'
 import { CharacterFilters } from '../components/CharacterFilters'
 import { CharacterCard } from '../components/CharacterCard'
 import { useCharacterContext } from '../contexts/CharacterContext'
