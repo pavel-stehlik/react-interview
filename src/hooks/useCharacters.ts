@@ -1,10 +1,7 @@
 import { useQuery } from 'react-query'
+import { fetchCharacters } from '../api/api'
 import { Character } from '../api/types'
 
-export const useCharacters = () => {
-  return useQuery<Character[]>('characters', async () => {
-    const response = await fetch('https://rickandmortyapi.com/api/character')
-    const data = await response.json()
-    return data.results
-  })
+export const useCharacters = (status?: string, gender?: string) => {
+  return useQuery<{ info: { next: string }; results: Character[] }>('characters', () => fetchCharacters(status, gender))
 }

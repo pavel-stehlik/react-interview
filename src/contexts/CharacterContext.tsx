@@ -1,7 +1,6 @@
 import { createContext, useState, useContext, useEffect, useCallback } from 'react'
-import { useQuery } from 'react-query'
-import axios from 'axios'
 import { Character } from '../api/types'
+import { fetchCharacters, fetchCharacterById } from '../api/api'
 
 type CharacterContextData = {
   characters: Character[] | null
@@ -26,17 +25,12 @@ export const CharacterProvider: React.FC = ({ children }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [nextPageUrl, setNextPageUrl] = useState<string | null>(null)
 
-  const fetchCharacters = useCallback(async (status?: string, gender?: string) => {
+  const fetchCharactersFromApi = useCallback(async (status?: string, gender?: string) => {
     setIsLoading(true)
     try {
-      const params = {
-        ...(status && { status }),
-        ...(gender && { gender })
-      }
-      const response = await axios.get('https://rickandmortyapi.com/api/character', { params })
-      const data = response.data.results
-      setCharacters(data)
-      setNextPageUrl(response.data.info.next)
+      const { results, info } = await fetchCharacters(status, gender)
+      setCharacters(results)
+      setNextPageUrl(info.next)
     } catch (error) {
       console.error('Error fetching characters:', error)
     } finally {
@@ -49,10 +43,9 @@ export const CharacterProvider: React.FC = ({ children }) => {
 
     setIsLoading(true)
     try {
-      const response = await axios.get(nextPageUrl)
-      const newData = response.data.results
-      setCharacters(prevCharacters => (prevCharacters ? [...prevCharacters, ...newData] : newData))
-      setNextPageUrl(response.data.info.next)
+      const { results, info } = await fetchCharacters()
+      setCharacters(prevCharacters => (prevCharacters ? [...prevCharacters, ...results] : results))
+      setNextPageUrl(info.next)
     } catch (error) {
       console.error('Error fetching more characters:', error)
     } finally {
@@ -60,10 +53,9 @@ export const CharacterProvider: React.FC = ({ children }) => {
     }
   }, [nextPageUrl])
 
-  const fetchCharacterById = useCallback(async (id: number) => {
+  const fetchCharacterByIdFromApi = useCallback(async (id: number) => {
     try {
-      const response = await axios.get(`https://rickandmortyapi.com/api/character/${id}`)
-      return response.data as Character
+      return await fetchCharacterById(id)
     } catch (error) {
       console.error(`Error fetching character with id ${id}:`, error)
       return undefined
@@ -71,12 +63,18 @@ export const CharacterProvider: React.FC = ({ children }) => {
   }, [])
 
   useEffect(() => {
-    fetchCharacters()
+    fetchCharactersFromApi()
   }, [])
 
   return (
     <CharacterContext.Provider
-      value={{ characters, isLoading, fetchCharacters, fetchMoreCharacters, fetchCharacterById }}
+      value={{
+        characters,
+        isLoading,
+        fetchCharacters: fetchCharactersFromApi,
+        fetchMoreCharacters,
+        fetchCharacterById: fetchCharacterByIdFromApi
+      }}
     >
       {children}
     </CharacterContext.Provider>

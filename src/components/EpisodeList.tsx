@@ -1,4 +1,4 @@
-import { Typography, Button, List, ListItem, ListItemText, Chip, Box } from '@mui/material'
+import { Typography, Button, Chip, Box } from '@mui/material'
 import { useState } from 'react'
 
 type EpisodeListProps = {
