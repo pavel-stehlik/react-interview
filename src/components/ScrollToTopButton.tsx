@@ -18,7 +18,6 @@ export const ScrollToTopButton = () => {
   const handleScroll = () => {
     const scrollTop = document.documentElement.scrollTop || document.body.scrollTop
     setIsVisible(scrollTop > 0)
-    console.log(isVisible)
   }
 
   const scrollToTop = () => {

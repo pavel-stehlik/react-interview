@@ -41,8 +41,8 @@ export const ListPage = () => {
       >
         <>
           {characters && characters.length > 0 ? (
-            characters.map(character => (
-              <CharacterCard key={character.id} character={character} onClick={handleCharacterClick} />
+            characters.map((character, index) => (
+              <CharacterCard key={`${character.id}-${index}`} character={character} onClick={handleCharacterClick} />
             ))
           ) : (
             <Typography>No characters found.</Typography>
