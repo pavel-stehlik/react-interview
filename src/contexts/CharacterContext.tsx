@@ -64,7 +64,7 @@ export const CharacterProvider: React.FC = ({ children }) => {
 
   useEffect(() => {
     fetchCharactersFromApi()
-  }, [])
+  }, [fetchCharactersFromApi])
 
   return (
     <CharacterContext.Provider

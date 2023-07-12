@@ -12,16 +12,14 @@ const queryClient = new QueryClient()
 export const App = () => (
   <QueryClientProvider client={queryClient}>
     <Provider store={store}>
-      <CharacterProvider>
-        <AppLayout>
-          <BrowserRouter>
-            <Switch>
-              <Route path="/detail/:id" component={DetailPage} />
-              <Route path="/" component={ListPage} />
-            </Switch>
-          </BrowserRouter>
-        </AppLayout>
-      </CharacterProvider>
+      <AppLayout>
+        <BrowserRouter>
+          <Switch>
+            <Route path="/detail/:id" component={DetailPage} />
+            <Route path="/" component={ListPage} />
+          </Switch>
+        </BrowserRouter>
+      </AppLayout>
     </Provider>
   </QueryClientProvider>
 )

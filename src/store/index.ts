@@ -13,4 +13,6 @@ export type AppStore = {
   theme: Theme
 }
 
+export type AppDispatch = typeof store.dispatch
+
 export default store

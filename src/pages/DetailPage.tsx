@@ -1,12 +1,15 @@
 import { useParams, useHistory } from 'react-router-dom'
 import { Typography, Box, Avatar, Grid, Button } from '@mui/material'
 import { styled } from '@mui/material/styles'
-import { useCharacterContext } from '../contexts/CharacterContext'
-import { useEffect, useState } from 'react'
-import { Character } from 'api/types'
+import { useEffect } from 'react'
 import { EpisodeList } from '../components/EpisodeList'
 import { format } from 'date-fns'
 import { cs } from 'date-fns/locale'
+import { useSelector, useDispatch } from 'react-redux'
+import { selectCharacter, selectEpisodes } from '../store/reducers/characterSelectors'
+import { setCharacter, setEpisodes, setIsLoading } from '../store/reducers/characterSlice'
+import { useCharacters } from '../hooks/useCharacters'
+import { AppDispatch } from '../store/index'
 
 const DetailContainer = styled(Grid)({
   padding: '16px'
@@ -30,36 +33,33 @@ const FullWidthAvatar = styled(Avatar)({
 export const DetailPage = () => {
   const { id } = useParams<{ id: string }>()
   const characterId = parseInt(id, 10)
-  const { fetchCharacterById, isLoading } = useCharacterContext()
-  const [character, setCharacter] = useState<Character | undefined>(undefined)
-  const [episodes, setEpisodes] = useState<string[]>([])
-
+  const { fetchCharacterById } = useCharacters()
+  const character = useSelector(selectCharacter)
+  const episodes = useSelector(selectEpisodes)
   const history = useHistory()
+  const dispatch = useDispatch<AppDispatch>()
 
   const handleGoBack = () => {
     history.goBack()
   }
 
   useEffect(() => {
-    const fetchCharacter = async () => {
-      const character = await fetchCharacterById(characterId)
-      if (character) {
-        setCharacter(character)
-        setEpisodes(character.episode)
-      }
+    // Reset character state when leaving DetailPage
+    return () => {
+      dispatch(setCharacter(null))
+      dispatch(setEpisodes([]))
+      dispatch(setIsLoading(false))
     }
-    fetchCharacter()
-  }, [fetchCharacterById, characterId])
+  }, [dispatch])
 
-  if (isLoading) {
-    return <div>Loading...</div>
-  }
+  useEffect(() => {
+    fetchCharacterById(characterId)
+  }, [fetchCharacterById, characterId])
 
   if (!character) {
     return <div>Character not found</div>
   }
 
-  // Formátování data pomocí date-fns
   const createdDate = new Date(character.created)
   const formattedCreatedDate = format(createdDate, 'd. MMMM yyyy HH:mm:ss', {
     locale: cs

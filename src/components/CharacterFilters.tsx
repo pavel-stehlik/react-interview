@@ -3,7 +3,8 @@ import { Box, Button, FormControl, InputLabel, MenuItem, Select } from '@mui/mat
 import { styled } from '@mui/system'
 import { CharacterStatus } from '../api/types'
 import { useDispatch, useSelector } from 'react-redux'
-import { setFilters, selectFilters } from '../store/reducers/characterSlice'
+import { setFilters } from '../store/reducers/characterSlice'
+import { selectFilters } from '../store/reducers/characterSelectors'
 
 type Props = {
   onApplyFilters: (status: string, gender: string) => void
@@ -24,6 +25,7 @@ export const CharacterFilters = ({ onApplyFilters }: Props) => {
   const handleApplyFilters = () => {
     dispatch(setFilters({ status, gender }))
     onApplyFilters(status, gender)
+    console.log(status, gender)
   }
 
   return (
