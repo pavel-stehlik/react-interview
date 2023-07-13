@@ -33,8 +33,8 @@ const FullWidthAvatar = styled(Avatar)({
 export const DetailPage = () => {
   const { id } = useParams<{ id: string }>()
   const characterId = parseInt(id, 10)
-  const { fetchCharacterById } = useCharacters()
-  const character = useSelector(selectCharacter)
+  const { fetchCharacterById } = useCharacters(undefined, undefined, characterId)
+  const character = fetchCharacterById.data
   const episodes = useSelector(selectEpisodes)
   const history = useHistory()
   const dispatch = useDispatch<AppDispatch>()
@@ -53,11 +53,16 @@ export const DetailPage = () => {
   }, [dispatch])
 
   useEffect(() => {
-    fetchCharacterById(characterId)
-  }, [fetchCharacterById, characterId])
+    console.log(characterId)
+    fetchCharacterById.refetch()
+  }, [characterId])
 
   if (!character) {
     return <div>Character not found</div>
+  }
+
+  if (fetchCharacterById.isFetching) {
+    return <div>Loading character...</div>
   }
 
   const createdDate = new Date(character.created)

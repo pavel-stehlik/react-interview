@@ -14,10 +14,25 @@ import { useEffect } from 'react'
 export const ListPage = () => {
   const history = useHistory()
   const filters = useSelector(selectFilters)
-  const { characters, isLoading, fetchMoreCharacters, fetchCharacters } = useCharacters(filters.status, filters.gender)
+  // const { characters, isLoading, fetchMoreCharacters, fetchCharacters } = useCharacters(filters.status, filters.gender)
   const dispatch = useDispatch()
 
+  const { characters, isFetching, fetchNextPage, hasNextPage, setLastViewedCharacter } = useCharacters(
+    filters.status,
+    filters.gender
+  )
+
+  // const handleCharacterClick = (id: number) => {
+  //   setLastViewedCharacter(id)
+  //   history.push(`/detail/${id}`, { prevPath: history.location.pathname })
+  // }
+
+  // const handleCharacterClick = (id: number) => {
+  //   history.push(`/detail/${id}`, { prevPath: history.location.pathname })
+  // }¨
+
   const handleCharacterClick = (id: number) => {
+    setLastViewedCharacter(id)
     history.push(`/detail/${id}`, { prevPath: history.location.pathname })
   }
 
@@ -26,22 +41,9 @@ export const ListPage = () => {
   }
 
   const handleLoadMore = () => {
-    console.log(isLoading, characters, characters.length)
-    if (characters && characters.length > 0) {
-      fetchMoreCharacters()
+    if (hasNextPage) {
+      fetchNextPage()
     }
-  }
-
-  useEffect(() => {
-    fetchCharacters()
-  }, [])
-
-  useEffect(() => {
-    fetchCharacters()
-  }, [filters.status, filters.gender])
-
-  if (isLoading && !characters) {
-    return <CircularProgress />
   }
 
   return (
