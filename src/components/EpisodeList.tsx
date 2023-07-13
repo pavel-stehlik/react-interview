@@ -1,17 +1,16 @@
-import { Typography, Button, Chip, Box } from '@mui/material'
+import { Typography, Button, Box } from '@mui/material'
 import { useState } from 'react'
+import { EpisodeBadge } from './EpisodeBadge'
 
 type EpisodeListProps = {
   episodes: string[]
 }
 
-const EpisodeBadge: React.FC<{ episode: string }> = ({ episode }) => {
-  return <Chip label={episode.replace('https://rickandmortyapi.com/api/episode/', 'Episode ')} />
-}
-
 export const EpisodeList: React.FC<EpisodeListProps> = ({ episodes }) => {
+  // State to control whether episode list is expanded
   const [isExpanded, setIsExpanded] = useState(false)
 
+  // Function to toggle episode list expansion
   const handleToggleExpand = () => {
     setIsExpanded(!isExpanded)
   }

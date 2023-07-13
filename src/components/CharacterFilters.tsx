@@ -17,15 +17,20 @@ const FiltersContainer = styled(Box)(({ theme }) => ({
 }))
 
 export const CharacterFilters = ({ onApplyFilters }: Props) => {
+  // Retrieve current filters from Redux store
   const filters = useSelector(selectFilters)
+  // Set up dispatch for Redux actions
   const dispatch = useDispatch()
+  // Initialize state with current filters from Redux store
   const [status, setStatus] = useState<string>(filters.status)
   const [gender, setGender] = useState<string>(filters.gender)
 
+  // Function to apply selected filters
   const handleApplyFilters = () => {
+    // Update Redux store with new filter values
     dispatch(setFilters({ status, gender }))
+    // Trigger filter application in parent component
     onApplyFilters(status, gender)
-    console.log(status, gender)
   }
 
   return (

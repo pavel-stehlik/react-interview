@@ -1,15 +1,14 @@
 import { useHistory } from 'react-router-dom'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { Typography, CircularProgress } from '@mui/material'
+import { Typography } from '@mui/material'
 import { CharacterFilters } from '../components/CharacterFilters'
 import { CharacterCard } from '../components/CharacterCard'
 import { useCharacters } from '../hooks/useCharacters'
 import { useDispatch, useSelector } from 'react-redux'
 import { setFilters } from '../store/reducers/characterSlice'
-import { selectFilters, selectCharacters } from '../store/reducers/characterSelectors'
+import { selectFilters } from '../store/reducers/characterSelectors'
 import { ScrollToTopButton } from '../components/ScrollToTopButton'
 import { Character } from '../api/types'
-import { useEffect } from 'react'
 
 export const ListPage = () => {
   const history = useHistory()
@@ -17,7 +16,7 @@ export const ListPage = () => {
   // const { characters, isLoading, fetchMoreCharacters, fetchCharacters } = useCharacters(filters.status, filters.gender)
   const dispatch = useDispatch()
 
-  const { characters, isFetching, fetchNextPage, hasNextPage, setLastViewedCharacter } = useCharacters(
+  const { characters, fetchNextPage, hasNextPage, setLastViewedCharacter } = useCharacters(
     filters.status,
     filters.gender
   )

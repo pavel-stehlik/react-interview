@@ -13,13 +13,16 @@ export const ScrollButton = styled(Button)(({ theme }) => ({
 }))
 
 export const ScrollToTopButton = () => {
+  // State to control whether button is visible
   const [isVisible, setIsVisible] = useState(false)
 
+  // Function to handle scrolling, updates visibility based on scroll position
   const handleScroll = () => {
     const scrollTop = document.documentElement.scrollTop || document.body.scrollTop
     setIsVisible(scrollTop > 0)
   }
 
+  // Function to scroll to top of page
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -27,6 +30,7 @@ export const ScrollToTopButton = () => {
     })
   }
 
+  // Function to scroll to top of page
   useEffect(() => {
     window.addEventListener('scroll', handleScroll)
     return () => {
