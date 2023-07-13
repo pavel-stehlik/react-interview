@@ -6,7 +6,7 @@ export enum CharacterStatus {
 
 export enum CharacterGender {
   MALE = 'male',
-  FAMALE = 'famale',
+  FEMALE = 'female',
   UNKNOWN = 'unknown'
 }
 

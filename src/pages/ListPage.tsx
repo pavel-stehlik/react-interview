@@ -1,28 +1,70 @@
 import { useHistory } from 'react-router-dom'
-import { Character, CharacterGender, CharacterStatus } from '../api/types'
+import InfiniteScroll from 'react-infinite-scroll-component'
+import { Typography } from '@mui/material'
+import { CharacterFilters } from '../components/CharacterFilters'
 import { CharacterCard } from '../components/CharacterCard'
+import { useCharacters } from '../hooks/useCharacters'
+import { useDispatch, useSelector } from 'react-redux'
+import { setFilters } from '../store/reducers/characterSlice'
+import { selectFilters } from '../store/reducers/characterSelectors'
+import { ScrollToTopButton } from '../components/ScrollToTopButton'
+import { Character } from '../api/types'
 
 export const ListPage = () => {
   const history = useHistory()
+  const filters = useSelector(selectFilters)
+  // const { characters, isLoading, fetchMoreCharacters, fetchCharacters } = useCharacters(filters.status, filters.gender)
+  const dispatch = useDispatch()
+
+  const { characters, fetchNextPage, hasNextPage, setLastViewedCharacter } = useCharacters(
+    filters.status,
+    filters.gender
+  )
+
+  // const handleCharacterClick = (id: number) => {
+  //   setLastViewedCharacter(id)
+  //   history.push(`/detail/${id}`, { prevPath: history.location.pathname })
+  // }
+
+  // const handleCharacterClick = (id: number) => {
+  //   history.push(`/detail/${id}`, { prevPath: history.location.pathname })
+  // }¨
 
   const handleCharacterClick = (id: number) => {
-    history.push(`/detail/${id}`)
+    setLastViewedCharacter(id)
+    history.push(`/detail/${id}`, { prevPath: history.location.pathname })
   }
 
-  const mock: Character = {
-    id: 2,
-    name: 'Morty Smith',
-    status: CharacterStatus.ALIVE,
-    species: 'Human',
-    type: '',
-    gender: CharacterGender.MALE,
-    origin: { name: 'unknown', url: '' },
-    location: { name: 'Citadel of Ricks', url: 'https://rickandmortyapi.com/api/location/3' },
-    image: 'https://rickandmortyapi.com/api/character/avatar/2.jpeg',
-    episode: [],
-    url: 'https://rickandmortyapi.com/api/character/2',
-    created: '2017-11-04T18:50:21.651Z'
+  const handleApplyFilters = (status: string, gender: string) => {
+    dispatch(setFilters({ status, gender }))
   }
 
-  return <CharacterCard character={mock} onClick={handleCharacterClick} />
+  const handleLoadMore = () => {
+    if (hasNextPage) {
+      fetchNextPage()
+    }
+  }
+
+  return (
+    <div>
+      <CharacterFilters onApplyFilters={handleApplyFilters} />
+      <InfiniteScroll
+        dataLength={characters.length}
+        next={handleLoadMore}
+        hasMore={characters.length > 0}
+        loader={<h4>Loading ...</h4>}
+      >
+        <>
+          {characters.length > 0 ? (
+            characters.map((character: Character, index: number) => (
+              <CharacterCard key={`${character.id}-${index}`} character={character} onClick={handleCharacterClick} />
+            ))
+          ) : (
+            <Typography>No characters found.</Typography>
+          )}
+        </>
+      </InfiniteScroll>
+      <ScrollToTopButton />
+    </div>
+  )
 }
